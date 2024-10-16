@@ -164,6 +164,8 @@ npm install -D eslint-plugin-jest-dom eslint-plugin-testing-library
 
 <br>
 
+## Optional
+
 - For SVG and CSS Modules, you should add these libraries:
 
 ```bash
