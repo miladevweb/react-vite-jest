@@ -55,6 +55,8 @@ You can also put this code inside a **jest** property in the **package.json**
 import '@testing-library/jest-dom'
 ```
 
+<br>
+
 - Vite create 3 tsconfig files, I prefer to have 1 tsconfig, but this is optional, you only need to add 2 lines of code to your **tsconfig.app.json** and **tsconfig.json** or delete them if you wanna have only one tsconfig file:
 
 ```json
@@ -95,8 +97,67 @@ import '@testing-library/jest-dom'
 
 - As you can see, in our tsconfig.json file we've added the esModuleInterop option and Aliases to have a better experience.
 
-Now, we add types for Node to use the alias in our project:
+  Now, we add types for Node to use the alias in our project:
 
 ```bash
 npm install @types/node -D
 ```
+
+- Add this in **vite.config.ts**:
+
+```typescript
+import { resolve } from 'node:path'
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+
+  /* For Aliases */
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
+})
+```
+
+<br>
+
+- Then, we need to add a linter to our project
+
+```bash
+npm install eslint-plugin-jest-dom eslint-plugin-testing-library -D
+```
+
+- Add this to your **eslint.config.js**:
+
+```javascript
+{
+  // ....
+  extends: [
+    js.configs.recommended,
+    ...tseslint.configs.recommended,
+
+    // Add these lines
+    'plugin:testing-library/react',
+    'plugin:jest-dom/recommended'
+  ],
+  // ....
+}
+```
+
+<br>
+
+- Finally, we need to add a script to our **package.json** file:
+
+```json
+  "scripts": {
+    // ....
+    "test": "jest",
+    "test:watch": "jest --watchAll=true", // realtime
+  },
+```
+
+- Run your tests with `npm run test`
