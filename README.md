@@ -3,7 +3,7 @@
 - First of all, we have to install Jest and its types as development dependecies:
 
 ```bash
-npm install jest @types/jest -D
+npm install -D jest @types/jest
 ```
 
 <br>
@@ -11,7 +11,7 @@ npm install jest @types/jest -D
 - Second, let's intall React Testing Library:
 
 ```bash
-npm install @testing-library/react @testing-library/jest-dom @testing-library/user-event -D
+npm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 <br>
@@ -19,7 +19,7 @@ npm install @testing-library/react @testing-library/jest-dom @testing-library/us
 - Next, we need to install jest-environment-jsdom **if you're using Jest28 or later** and ts-jest **instead of babel for JavaScript projects**
 
 ```bash
-npm install jest-environment-jsdom ts-jest -D
+npm install -D jest-environment-jsdom ts-jest
 ```
 
 <br>
@@ -100,7 +100,7 @@ import '@testing-library/jest-dom'
   Now, we add types for Node to use the alias in our project:
 
 ```bash
-npm install @types/node -D
+npm install -D @types/node
 ```
 
 - Add this in **vite.config.ts**:
@@ -128,7 +128,7 @@ export default defineConfig({
 - Then, we need to add a linter to our project
 
 ```bash
-npm install eslint-plugin-jest-dom eslint-plugin-testing-library -D
+npm install -D eslint-plugin-jest-dom eslint-plugin-testing-library
 ```
 
 - Add this to your **eslint.config.js**:
@@ -161,3 +161,35 @@ npm install eslint-plugin-jest-dom eslint-plugin-testing-library -D
 ```
 
 - Run your tests with `npm run test`
+
+<br>
+
+- For SVG and CSS Modules, you should add these libraries:
+
+```bash
+npm install -D identity-obj-proxy jest-transformer-svg
+```
+
+- Then, modify your **jest.config.js**:
+
+```javascript
+// jest.config.js
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+
+    // Add these lines
+    '^.+\\.svg$': 'jest-transformer-svg',
+    '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
+  },
+
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+}
+```
