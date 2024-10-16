@@ -16,7 +16,7 @@ npm install @testing-library/react @testing-library/jest-dom @testing-library/us
 
 <br>
 
-- Next, we need install jest-environment-jsdom **if you're using Jest28 or later** and ts-jest **instead of babel for JavaScript projects**
+- Next, we need to install jest-environment-jsdom **if you're using Jest28 or later** and ts-jest **instead of babel for JavaScript projects**
 
 ```bash
 npm install jest-environment-jsdom ts-jest -D
@@ -24,4 +24,79 @@ npm install jest-environment-jsdom ts-jest -D
 
 <br>
 
-- 
+- Then, create a **jest.config.js** file in the root of your project and add the following code:
+
+```javascript
+// jest.config.js
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+}
+```
+
+You can also put this code inside a **jest** property in the **package.json**
+
+<br>
+
+- Then, create a **jest.setup.ts** file in the root of your project and add the following code, this will make sure that the Jest environment is set up correctly:
+
+```typescript
+// jest.setup.ts
+import '@testing-library/jest-dom'
+```
+
+- Vite create 3 tsconfig files, I prefer to have 1 tsconfig, but this is optional, you only need to add 2 lines of code to your **tsconfig.app.json** and **tsconfig.json** or delete them if you wanna have only one tsconfig file:
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true, // add this line
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Aliases */
+    "baseUrl": "./src",
+    "paths": { "@/*": ["./*"] }
+  },
+
+  "include": ["src", "vite.config.ts", "jest.setup.ts"] // add this line
+}
+```
+
+<br>
+
+- As you can see, in our tsconfig.json file we've added the esModuleInterop option and Aliases to have a better experience.
+
+Now, we add types for Node to use the alias in our project:
+
+```bash
+npm install @types/node -D
+```
